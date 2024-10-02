@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>書籍詳情 - 我的書店</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        header {
+            background-color: #003366;
+            color: white;
+            padding: 10px 0;
+        }
+        .container {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        .product-details {
+            display: flex;
+            margin-top: 20px;
+        }
+        .product-image {
+            width: 35%;
+            padding-right: 20px;
+        }
+        .product-image img {
+            max-width: 100%;
+            height: auto;
+        }
+        .product-info {
+            width: 65%;
+        }
+        .product-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .product-meta {
+            margin-bottom: 20px;
+        }
+        .product-meta p {
+            margin: 5px 0;
+        }
+        .product-price {
+            font-size: 20px;
+            color: #c00;
+            font-weight: bold;
+        }
+        .product-description {
+            margin-top: 30px;
+        }
+        .tab-container {
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            display: inline-block;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        .tab.active {
+            border: 1px solid #ddd;
+            border-bottom: none;
+            background-color: #fff;
+        }
+        .tab-content {
+            padding: 20px 0;
+        }
+        .user-reviews {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>我的書店</h1>
+            <!-- 這裡可以添加搜索欄和導航鏈接 -->
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="product-details">
+            <div class="product-image">
+                <img src="https://via.placeholder.com/300x400" alt="書籍封面">
+            </div>
+            <div class="product-info">
+                <h2 class="product-title">Python程式設計：從入門到實踐</h2>
+                <div class="product-meta">
+                    <p>作者: 艾瑞克·馬瑟斯</p>
+                    <p>出版社: 人民郵電出版社</p>
+                    <p>出版日期: 2023-01-01</p>
+                    <p>ISBN: 978-7-115-58256-5</p>
+                </div>
+                <div class="product-price">NT$ 450</div>
+                <!-- 這裡可以添加購買按鈕 -->
+            </div>
+        </div>
+
+        <div class="product-description">
+            <div class="tab-container">
+                <div class="tab active" onclick="showTab('intro')">內容簡介</div>
+                <div class="tab" onclick="showTab('author')">作者介紹</div>
+            </div>
+            <div id="intro" class="tab-content">
+                <p>本書是一本Python入門教程，涵蓋了Python的基礎知識和進階應用。從變量、數據類型、控制流程到函數、類、文件操作等，本書都有詳細的講解和實例。此外，本書還包含了一些實際項目，如開發Web應用、數據可視化等，幫助讀者將所學知識應用到實際開發中。</p>
+            </div>
+            <div id="author" class="tab-content" style="display:none;">
+                <p>艾瑞克·馬瑟斯是一位經驗豐富的程式設計師和技術作家。他擁有超過15年的Python開發經驗，曾在多家科技公司擔任高級開發工程師。除了編寫代碼，他還熱衷於教學，經常在各種技術會議上發表演講，並撰寫技術博客。本書是他多年教學和實踐經驗的結晶。</p>
+            </div>
+        </div>
+
+        <div class="user-reviews">
+            <h3>用戶評論</h3>
+            <!-- 這裡可以添加用戶評論和評分系統 -->
+            <p>暫無評論</p>
+        </div>
+    </main>
+
+    <script>
+        function showTab(tabId) {
+            // 隱藏所有標籤內容
+            var tabContents = document.getElementsByClassName('tab-content');
+            for (var i = 0; i < tabContents.length; i++) {
+                tabContents[i].style.display = 'none';
+            }
+            // 顯示選中的標籤內容
+            document.getElementById(tabId).style.display = 'block';
+            
+            // 更新標籤樣式
+            var tabs = document.getElementsByClassName('tab');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
