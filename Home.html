@@ -147,20 +147,20 @@ select {
   </ul>
 
   <div id="book-grid" class="grid">
-    <!-- 網格項目將由 JavaScript 動態生成 -->
+  
   </div>
 
   <ul class="pagination" id="pagination">
-    <!-- 分頁按鈕將由 JavaScript 動態生成 -->
+  
   </ul>
 </div>
 
 <script>
-  // 模擬從服務器獲取的書籍數據
+  
   const booksData = [
     { image: 'book1.jpg', title: '書名1', isbn: 'ISBN1234567', source: '來源1' },
     { image: 'book2.jpg', title: '書名2', isbn: 'ISBN2345678', source: '來源2' },
-    // ... 添加更多書籍數據，總共27筆
+    
   ];
 
   let currentPage = 1;
@@ -188,12 +188,12 @@ select {
     const pagination = document.getElementById('pagination');
     pagination.innerHTML = '';
 
-    // 添加上一頁按鈕
+    
     const prevLi = document.createElement('li');
     prevLi.innerHTML = `<a href="#" data-page="prev">&laquo;</a>`;
     pagination.appendChild(prevLi);
 
-    // 添加頁碼按鈕
+    
     for (let i = 1; i <= totalPages; i++) {
       const li = document.createElement('li');
       li.innerHTML = `<a href="#" data-page="${i}">${i}</a>`;
@@ -203,12 +203,12 @@ select {
       pagination.appendChild(li);
     }
 
-    // 添加下一頁按鈕
+   
     const nextLi = document.createElement('li');
     nextLi.innerHTML = `<a href="#" data-page="next">&raquo;</a>`;
     pagination.appendChild(nextLi);
 
-    // 添加點擊事件
+    
     pagination.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', (event) => {
         event.preventDefault();
@@ -256,7 +256,7 @@ select {
     }
   }
 
-  // 頁面加載時初始化顯示
+  
   document.addEventListener('DOMContentLoaded', () => {
     updateDisplay();
   });
