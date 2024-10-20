@@ -27,8 +27,19 @@ body {
   align-items: center;
   margin: 20px 0;
 }
+.search-container .filter {
+  width: auto; /* 恢復為自動寬度 */
+  margin-right: 10px;
+}
+.search-container .filter select {
+  width: auto; /* 恢復為自動寬度 */
+  padding: 10px;
+  font-size: 16px;
+  height: 41px; /* 保持與搜索欄位高度相同 */
+  box-sizing: border-box;
+}
 input[type="text"] {
-  width: 500px;
+  width: 500px; /* 保持原有寬度 */
   padding: 10px;
   font-size: 16px;
 }
@@ -39,6 +50,7 @@ button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
+  height: 41px; /* 保持與搜索欄位高度相同 */
 }
 .filter-container {
   display: flex;
