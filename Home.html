@@ -24,6 +24,7 @@ body {
 .search-container {
   display: flex;
   justify-content: center;
+  align-items: center;
   margin: 20px 0;
 }
 input[type="text"] {
@@ -78,10 +79,17 @@ select {
   color: white;
 }
 
+.view-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
 .view-toggle {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 10px;
+  margin: 0;
+  padding: 0;
 }
 
 .view-toggle li {
@@ -109,9 +117,31 @@ select {
   margin: 0 10px;
 }
 
-.search-field, .select-field {
+.search-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.recent-searches {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
   width: 100%;
-  max-width: 300px; /* 設置最大寬度 */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.recent-searches div {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.recent-searches div:hover {
+  background-color: #f0f0f0;
 }
 
 </style>
@@ -127,18 +157,22 @@ select {
 <div class="container">
   <div class="search-container">
     <div class="filter">
-      <select>
+      <select id="searchCondition" onchange="updatePlaceholder()">
         <option value="" disabled selected>選擇條件</option>
-        <option value="publisher1">出版社</option>
-        <option value="price1">價格</option>
+        <option value="title">書名</option>
+        <option value="author">作者</option>
+        <option value="isbn">ISBN</option>
+        <option value="publisher">出版社</option>
       </select>
     </div>
-    <input type="text" placeholder="搜索">
-    <button>搜索</button>
+    <div class="search-wrapper">
+      <input type="text" id="searchInput" placeholder="搜索" onfocus="showRecentSearches()" onblur="hideRecentSearches()">
+      <div class="recent-searches" id="recentSearches"></div>
+    </div>
+    <button onclick="performSearch()">搜索</button>
   </div>
 
-  <div class="filter-container">
-    
+  <div class="view-options">
     <div class="filter">
       <select id="itemsPerPage" onchange="changeItemsPerPage()">
         <option value="24" selected>每頁顯示24個</option>
@@ -146,12 +180,11 @@ select {
         <option value="72">每頁顯示72個</option>
       </select>
     </div>
+    <ul class="view-toggle">
+      <li class="active" onclick="changeView(this, 'list')"><i class="icon-th-list-1"></i>列表</li>
+      <li onclick="changeView(this, 'grid')"><i class="icon-th-large-1"></i>小圖</li>
+    </ul>
   </div>
-
-  <ul class="view-toggle">
-    <li class="active" onclick="changeView(this, 'list')"><i class="icon-th-list-1"></i>列表</li>
-    <li onclick="changeView(this, 'grid')"><i class="icon-th-large-1"></i>小圖</li>
-  </ul>
 
   <div id="book-grid" class="grid">
   
@@ -165,9 +198,9 @@ select {
 <script>
   
   const booksData = [
-    { image: 'book1.jpg', title: '書名1', isbn: 'ISBN1234567', source: '來源1' },
-    { image: 'book2.jpg', title: '書名2', isbn: 'ISBN2345678', source: '來源2' },
-    
+    { id: 1, image: 'book1.jpg', title: '書名1', isbn: 'ISBN1234567', source: '來源1', clicks: 0 },
+    { id: 2, image: 'book2.jpg', title: '書名2', isbn: 'ISBN2345678', source: '來源2', clicks: 0 },
+    // ... 添加更多書籍數據 ...
   ];
 
   let currentPage = 1;
@@ -181,10 +214,11 @@ select {
       const gridItem = document.createElement('div');
       gridItem.className = 'grid-item';
       gridItem.innerHTML = `
-        <p><a href="book.html" target="_blank"><img src="${book.image}" alt="${book.title}"></a></p>
+        <p><a href="book.html" target="_blank"><img src="${book.image}" alt="${book.title}" onclick="incrementClicks(${book.id})"></a></p>
         <p>${book.title}</p>
         <p>${book.isbn}</p>
         <p>${book.source}</p>
+        <p>點閱次數: ${book.clicks}</p>
       `;
       grid.appendChild(gridItem);
     });
@@ -195,12 +229,10 @@ select {
     const pagination = document.getElementById('pagination');
     pagination.innerHTML = '';
 
-    
     const prevLi = document.createElement('li');
     prevLi.innerHTML = `<a href="#" data-page="prev">&laquo;</a>`;
     pagination.appendChild(prevLi);
 
-    
     for (let i = 1; i <= totalPages; i++) {
       const li = document.createElement('li');
       li.innerHTML = `<a href="#" data-page="${i}">${i}</a>`;
@@ -210,12 +242,10 @@ select {
       pagination.appendChild(li);
     }
 
-   
     const nextLi = document.createElement('li');
     nextLi.innerHTML = `<a href="#" data-page="next">&raquo;</a>`;
     pagination.appendChild(nextLi);
 
-    
     pagination.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', (event) => {
         event.preventDefault();
@@ -235,6 +265,7 @@ select {
   }
 
   function updateDisplay() {
+    sortBooksByClicks();
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const booksToShow = booksData.slice(startIndex, endIndex);
@@ -263,9 +294,107 @@ select {
     }
   }
 
-  
+  function updatePlaceholder() {
+    const searchCondition = document.getElementById('searchCondition');
+    const searchInput = document.getElementById('searchInput');
+    
+    switch(searchCondition.value) {
+      case 'title':
+        searchInput.placeholder = '輸入書名';
+        break;
+      case 'author':
+        searchInput.placeholder = '輸入作者';
+        break;
+      case 'isbn':
+        searchInput.placeholder = '輸入ISBN';
+        break;
+      case 'publisher':
+        searchInput.placeholder = '輸入出版社';
+        break;
+      default:
+        searchInput.placeholder = '搜索';
+    }
+  }
+
+  function performSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const searchTerm = searchInput.value.trim();
+    
+    if (searchTerm) {
+      addToRecentSearches(searchTerm);
+      console.log('Searching for:', searchTerm);
+      searchInput.value = '';
+    }
+  }
+
+  function addToRecentSearches(term) {
+    let recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+    recentSearches = recentSearches.filter(item => item !== term);
+    recentSearches.unshift(term);
+    recentSearches = recentSearches.slice(0, 5);
+    localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+    displayRecentSearches();
+  }
+
+  function displayRecentSearches() {
+    const recentSearchesContainer = document.getElementById('recentSearches');
+    const recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+    
+    recentSearchesContainer.innerHTML = '';
+    recentSearches.forEach(term => {
+      const div = document.createElement('div');
+      div.textContent = term;
+      div.onclick = () => {
+        document.getElementById('searchInput').value = term;
+        hideRecentSearches();
+      };
+      recentSearchesContainer.appendChild(div);
+    });
+  }
+
+  function showRecentSearches() {
+    const recentSearchesContainer = document.getElementById('recentSearches');
+    recentSearchesContainer.style.display = 'block';
+  }
+
+  function hideRecentSearches() {
+    setTimeout(() => {
+      const recentSearchesContainer = document.getElementById('recentSearches');
+      recentSearchesContainer.style.display = 'none';
+    }, 200);
+  }
+
+  function incrementClicks(bookId) {
+    const book = booksData.find(b => b.id === bookId);
+    if (book) {
+      book.clicks++;
+      saveBooksData();
+      sortBooksByClicks();
+      updateDisplay();
+    }
+  }
+
+  function sortBooksByClicks() {
+    booksData.sort((a, b) => b.clicks - a.clicks);
+  }
+
+  function saveBooksData() {
+    localStorage.setItem('booksData', JSON.stringify(booksData));
+  }
+
+  function loadBooksData() {
+    const savedData = localStorage.getItem('booksData');
+    if (savedData) {
+      booksData.length = 0;
+      booksData.push(...JSON.parse(savedData));
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
+    loadBooksData();
     updateDisplay();
+    updatePlaceholder();
+    displayRecentSearches();
   });
 </script>
 
