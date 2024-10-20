@@ -98,6 +98,15 @@ select {
   margin-bottom: 10px;
 }
 
+.view-options .filter-group {
+  display: flex;
+  align-items: center;
+}
+
+.view-options .filter-group .filter {
+  margin-right: 10px;
+}
+
 .view-toggle {
   display: flex;
   margin: 0;
@@ -185,12 +194,21 @@ select {
   </div>
 
   <div class="view-options">
-    <div class="filter">
-      <select id="itemsPerPage" onchange="changeItemsPerPage()">
-        <option value="24" selected>每頁顯示24個</option>
-        <option value="48">每頁顯示48個</option>
-        <option value="72">每頁顯示72個</option>
-      </select>
+    <div class="filter-group">
+      <div class="filter">
+        <select id="itemsPerPage" onchange="changeItemsPerPage()">
+          <option value="24" selected>每頁顯示24個</option>
+          <option value="48">每頁顯示48個</option>
+          <option value="72">每頁顯示72個</option>
+        </select>
+      </div>
+      <div class="filter">
+        <select id="sourceFilter" onchange="filterBySource()">
+          <option value="all" selected>全部</option>
+          <option value="berkeley">柏克萊</option>
+          <option value="newbooks">新書網</option>
+        </select>
+      </div>
     </div>
     <ul class="view-toggle">
       <li class="active" onclick="changeView(this, 'list')"><i class="icon-th-list-1"></i>列表</li>
@@ -217,6 +235,8 @@ select {
 
   let currentPage = 1;
   let itemsPerPage = 24;
+
+  let filteredBooks = [];
 
   function generateGridItems(books) {
     const grid = document.getElementById('book-grid');
@@ -280,10 +300,10 @@ select {
     sortBooksByClicks();
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const booksToShow = booksData.slice(startIndex, endIndex);
+    const booksToShow = filteredBooks.slice(startIndex, endIndex);
 
     generateGridItems(booksToShow);
-    generatePagination(booksData.length);
+    generatePagination(filteredBooks.length);
   }
 
   function changeItemsPerPage() {
@@ -400,6 +420,18 @@ select {
       booksData.length = 0;
       booksData.push(...JSON.parse(savedData));
     }
+    filteredBooks = [...booksData]; // 初始化 filteredBooks
+  }
+
+  function filterBySource() {
+    const sourceFilter = document.getElementById('sourceFilter').value;
+    if (sourceFilter === 'all') {
+      filteredBooks = [...booksData];
+    } else {
+      filteredBooks = booksData.filter(book => book.source === sourceFilter);
+    }
+    currentPage = 1;
+    updateDisplay();
   }
 
   document.addEventListener('DOMContentLoaded', () => {
