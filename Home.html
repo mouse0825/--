@@ -28,18 +28,18 @@ body {
   margin: 20px 0;
 }
 .search-container .filter {
-  width: auto; /* 恢復為自動寬度 */
+  width: auto;
   margin-right: 10px;
 }
 .search-container .filter select {
-  width: auto; /* 恢復為自動寬度 */
+  width: auto;
   padding: 10px;
   font-size: 16px;
-  height: 41px; /* 保持與搜索欄位高度相同 */
+  height: 41px;
   box-sizing: border-box;
 }
 input[type="text"] {
-  width: 500px; /* 保持原有寬度 */
+  width: 500px;
   padding: 10px;
   font-size: 16px;
 }
@@ -50,7 +50,7 @@ button {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  height: 41px; /* 保持與搜索欄位高度相同 */
+  height: 41px;
 }
 .filter-container {
   display: flex;
@@ -420,7 +420,7 @@ select {
       booksData.length = 0;
       booksData.push(...JSON.parse(savedData));
     }
-    filteredBooks = [...booksData]; // 初始化 filteredBooks
+    filteredBooks = [...booksData];
   }
 
   function filterBySource() {
