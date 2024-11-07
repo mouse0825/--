@@ -2,6 +2,8 @@
 <html>
 <head>
 <title>書籍搜索</title>
+<link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
 <style>
 body {
   font-family: Arial, sans-serif;
@@ -52,44 +54,6 @@ button {
   cursor: pointer;
   height: 41px;
 }
-.filter-container {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-select {
-  padding: 5px;
-  font-size: 14px;
-}
-.grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-.grid-item {
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: center;
-}
-.pagination {
-  display: flex;
-  justify-content: center;
-  list-style: none;
-  padding: 20px 0;
-}
-.pagination li {
-  margin: 0 5px;
-}
-.pagination a {
-  text-decoration: none;
-  color: #333;
-  padding: 5px 10px;
-  border: 1px solid #ccc;
-}
-.pagination .active a {
-  background-color: #ff6600;
-  color: white;
-}
 
 .view-options {
   display: flex;
@@ -123,6 +87,18 @@ select {
   font-weight: bold;
 }
 
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.grid-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+}
+
 .grid.list-view {
   display: block;
 }
@@ -136,6 +112,29 @@ select {
 
 .grid.list-view .grid-item p {
   margin: 0 10px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 20px 0;
+}
+
+.pagination li {
+  margin: 0 5px;
+}
+
+.pagination a {
+  text-decoration: none;
+  color: #333;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+}
+
+.pagination .active a {
+  background-color: #ff6600;
+  color: white;
 }
 
 .search-wrapper {
@@ -165,6 +164,141 @@ select {
   background-color: #f0f0f0;
 }
 
+/* 熱門書籍區域樣式 */
+.hot-books {
+  margin: 20px 0;
+  padding: 20px;
+  background: #f5f5f5;
+}
+
+.carousel {
+  background: #f5f5f5;
+  height: 450px;
+}
+
+.book-cell {
+  width: 800px;
+  height: 400px;
+  margin: 0 20px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+}
+
+.book-img {
+  width: 200px;
+  margin-right: 30px;
+  flex-shrink: 0;
+}
+
+.book-photo {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.book-content {
+  flex: 1;
+}
+
+.book-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.book-author {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.book-sum {
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  color: #666;
+}
+
+.book-see {
+  display: inline-block;
+  padding: 10px 30px;
+  border-radius: 25px;
+  background: #ff6600;
+  color: #fff;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+
+.rating {
+  border: none;
+  float: left;
+  margin-right: 10px;
+}
+
+.rating > input {
+  display: none;
+}
+
+.rating > label:before {
+  content: '★';
+  font-size: 20px;
+  color: #ddd;
+  cursor: pointer;
+}
+
+.rating > input:checked ~ label:before,
+.rating:not(:checked) > label:hover:before,
+.rating:not(:checked) > label:hover ~ label:before {
+  color: #ffd700;
+}
+
+.rating > label {
+  float: right;
+  padding: 0 2px;
+  cursor: pointer;
+}
+
+.book-voters {
+  color: #666;
+  font-size: 14px;
+  line-height: 24px;
+  margin-left: 10px;
+}
+
+.rate {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* Flickity 相關樣式 */
+.flickity-viewport {
+  height: 450px !important;
+}
+
+.flickity-slider {
+  display: flex;
+  align-items: center;
+}
+
+.flickity-button {
+  background: #fff;
+}
+
+.flickity-prev-next-button {
+  width: 40px;
+  height: 40px;
+}
+
+.flickity-page-dots {
+  bottom: -40px;
+}
+
 </style>
 </head>
 <body>
@@ -176,6 +310,14 @@ select {
 </div>
 
 <div class="container">
+  <!-- 熱門書籍區域 -->
+  <div class="hot-books">
+    <h2 class="section-title">熱門書籍</h2>
+    <div class="carousel">
+      <!-- 輪播內容將由 JavaScript 動態生成 -->
+    </div>
+  </div>
+
   <div class="search-container">
     <div class="filter">
       <select id="searchCondition" onchange="updatePlaceholder()">
@@ -217,229 +359,330 @@ select {
   </div>
 
   <div id="book-grid" class="grid">
-  
   </div>
 
   <ul class="pagination" id="pagination">
-  
   </ul>
 </div>
 
 <script>
-  
-  const booksData = [
-    { id: 1, image: 'book1.jpg', title: '書名1', isbn: 'ISBN1234567', source: '來源1', clicks: 0 },
-    { id: 2, image: 'book2.jpg', title: '書名2', isbn: 'ISBN2345678', source: '來源2', clicks: 0 },
-    // ... 添加更多書籍數據 ...
-  ];
-
-  let currentPage = 1;
-  let itemsPerPage = 24;
-
-  let filteredBooks = [];
-
-  function generateGridItems(books) {
-    const grid = document.getElementById('book-grid');
-    grid.innerHTML = '';
-
-    books.forEach(book => {
-      const gridItem = document.createElement('div');
-      gridItem.className = 'grid-item';
-      gridItem.innerHTML = `
-        <p><a href="book.html" target="_blank"><img src="${book.image}" alt="${book.title}" onclick="incrementClicks(${book.id})"></a></p>
-        <p>${book.title}</p>
-        <p>${book.isbn}</p>
-        <p>${book.source}</p>
-        <p>點閱次數: ${book.clicks}</p>
-      `;
-      grid.appendChild(gridItem);
-    });
+const booksData = [
+  { 
+    id: 1, 
+    image: 'https://i.imgur.com/yCFAW6y.jpg',
+    title: '貓咪的日常生活',
+    isbn: 'ISBN1234567', 
+    source: '柏克萊', 
+    clicks: 0,
+    author: '貓咪作家',
+    description: '這是一本關於貓咪日常生活的有趣故事集',
+    voters: '1,987 voters'
+  },
+  { 
+    id: 2, 
+    image: 'https://i.imgur.com/yCFAW6y.jpg',
+    title: '貓咪的冒險', 
+    isbn: 'ISBN2345678', 
+    source: '新書網', 
+    clicks: 0,
+    author: '喵星人',
+    description: '一個關於貓咪冒險的精彩故事',
+    voters: '1,987 voters'
+  },
+  { 
+    id: 3, 
+    image: 'https://i.imgur.com/yCFAW6y.jpg',
+    title: '貓咪的美食指南', 
+    isbn: 'ISBN3456789', 
+    source: '柏克萊', 
+    clicks: 0,
+    author: '美食貓',
+    description: '探索貓咪最愛的美食世界',
+    voters: '1,987 voters'
+  },
+  { 
+    id: 4, 
+    image: 'https://i.imgur.com/yCFAW6y.jpg',
+    title: '貓咪的睡眠藝術', 
+    isbn: 'ISBN4567890', 
+    source: '新書網', 
+    clicks: 0,
+    author: '睡神貓',
+    description: '揭秘貓咪的睡眠哲學',
+    voters: '1,987 voters'
+  },
+  { 
+    id: 5, 
+    image: 'https://i.imgur.com/yCFAW6y.jpg',
+    title: '貓咪的觀察日記', 
+    isbn: 'ISBN5678901', 
+    source: '柏克萊', 
+    clicks: 0,
+    author: '觀察家貓',
+    description: '從貓咪的視角觀察這個世界',
+    voters: '1,987 voters'
   }
+];
 
-  function generatePagination(totalItems) {
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-    const pagination = document.getElementById('pagination');
-    pagination.innerHTML = '';
+let currentPage = 1;
+let itemsPerPage = 24;
+let filteredBooks = [];
 
-    const prevLi = document.createElement('li');
-    prevLi.innerHTML = `<a href="#" data-page="prev">&laquo;</a>`;
-    pagination.appendChild(prevLi);
+function generateGridItems(books) {
+  const grid = document.getElementById('book-grid');
+  grid.innerHTML = '';
 
-    for (let i = 1; i <= totalPages; i++) {
-      const li = document.createElement('li');
-      li.innerHTML = `<a href="#" data-page="${i}">${i}</a>`;
-      if (i === currentPage) {
-        li.classList.add('active');
-      }
-      pagination.appendChild(li);
-    }
-
-    const nextLi = document.createElement('li');
-    nextLi.innerHTML = `<a href="#" data-page="next">&raquo;</a>`;
-    pagination.appendChild(nextLi);
-
-    pagination.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', (event) => {
-        event.preventDefault();
-        const page = link.dataset.page;
-
-        if (page === 'prev') {
-          currentPage = Math.max(1, currentPage - 1);
-        } else if (page === 'next') {
-          currentPage = Math.min(totalPages, currentPage + 1);
-        } else {
-          currentPage = parseInt(page);
-        }
-
-        updateDisplay();
-      });
-    });
-  }
-
-  function updateDisplay() {
-    sortBooksByClicks();
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const booksToShow = filteredBooks.slice(startIndex, endIndex);
-
-    generateGridItems(booksToShow);
-    generatePagination(filteredBooks.length);
-  }
-
-  function changeItemsPerPage() {
-    itemsPerPage = parseInt(document.getElementById('itemsPerPage').value);
-    currentPage = 1;
-    updateDisplay();
-  }
-
-  function changeView(element, viewType) {
-    const viewToggle = document.querySelector('.view-toggle');
-    const grid = document.querySelector('.grid');
-    
-    viewToggle.querySelectorAll('li').forEach(li => li.classList.remove('active'));
-    element.classList.add('active');
-
-    if (viewType === 'list') {
-      grid.classList.add('list-view');
-    } else {
-      grid.classList.remove('list-view');
-    }
-  }
-
-  function updatePlaceholder() {
-    const searchCondition = document.getElementById('searchCondition');
-    const searchInput = document.getElementById('searchInput');
-    
-    switch(searchCondition.value) {
-      case 'title':
-        searchInput.placeholder = '輸入書名';
-        break;
-      case 'author':
-        searchInput.placeholder = '輸入作者';
-        break;
-      case 'isbn':
-        searchInput.placeholder = '輸入ISBN';
-        break;
-      case 'publisher':
-        searchInput.placeholder = '輸入出版社';
-        break;
-      default:
-        searchInput.placeholder = '搜索';
-    }
-  }
-
-  function performSearch() {
-    const searchInput = document.getElementById('searchInput');
-    const searchTerm = searchInput.value.trim();
-    
-    if (searchTerm) {
-      addToRecentSearches(searchTerm);
-      console.log('Searching for:', searchTerm);
-      searchInput.value = '';
-    }
-  }
-
-  function addToRecentSearches(term) {
-    let recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
-    recentSearches = recentSearches.filter(item => item !== term);
-    recentSearches.unshift(term);
-    recentSearches = recentSearches.slice(0, 5);
-    localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
-    displayRecentSearches();
-  }
-
-  function displayRecentSearches() {
-    const recentSearchesContainer = document.getElementById('recentSearches');
-    const recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
-    
-    recentSearchesContainer.innerHTML = '';
-    recentSearches.forEach(term => {
-      const div = document.createElement('div');
-      div.textContent = term;
-      div.onclick = () => {
-        document.getElementById('searchInput').value = term;
-        hideRecentSearches();
-      };
-      recentSearchesContainer.appendChild(div);
-    });
-  }
-
-  function showRecentSearches() {
-    const recentSearchesContainer = document.getElementById('recentSearches');
-    recentSearchesContainer.style.display = 'block';
-  }
-
-  function hideRecentSearches() {
-    setTimeout(() => {
-      const recentSearchesContainer = document.getElementById('recentSearches');
-      recentSearchesContainer.style.display = 'none';
-    }, 200);
-  }
-
-  function incrementClicks(bookId) {
-    const book = booksData.find(b => b.id === bookId);
-    if (book) {
-      book.clicks++;
-      saveBooksData();
-      sortBooksByClicks();
-      updateDisplay();
-    }
-  }
-
-  function sortBooksByClicks() {
-    booksData.sort((a, b) => b.clicks - a.clicks);
-  }
-
-  function saveBooksData() {
-    localStorage.setItem('booksData', JSON.stringify(booksData));
-  }
-
-  function loadBooksData() {
-    const savedData = localStorage.getItem('booksData');
-    if (savedData) {
-      booksData.length = 0;
-      booksData.push(...JSON.parse(savedData));
-    }
-    filteredBooks = [...booksData];
-  }
-
-  function filterBySource() {
-    const sourceFilter = document.getElementById('sourceFilter').value;
-    if (sourceFilter === 'all') {
-      filteredBooks = [...booksData];
-    } else {
-      filteredBooks = booksData.filter(book => book.source === sourceFilter);
-    }
-    currentPage = 1;
-    updateDisplay();
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    loadBooksData();
-    updateDisplay();
-    updatePlaceholder();
-    displayRecentSearches();
+  books.forEach(book => {
+    const gridItem = document.createElement('div');
+    gridItem.className = 'grid-item';
+    gridItem.innerHTML = `
+      <p><a href="book.html" target="_blank"><img src="${book.image}" alt="${book.title}" onclick="incrementClicks(${book.id})"></a></p>
+      <p>${book.title}</p>
+      <p>${book.isbn}</p>
+      <p>${book.source}</p>
+    `;
+    grid.appendChild(gridItem);
   });
+}
+
+function generatePagination(totalItems) {
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const pagination = document.getElementById('pagination');
+  pagination.innerHTML = '';
+
+  const prevLi = document.createElement('li');
+  prevLi.innerHTML = `<a href="#" data-page="prev">&laquo;</a>`;
+  pagination.appendChild(prevLi);
+
+  for (let i = 1; i <= totalPages; i++) {
+    const li = document.createElement('li');
+    li.innerHTML = `<a href="#" data-page="${i}">${i}</a>`;
+    if (i === currentPage) {
+      li.classList.add('active');
+    }
+    pagination.appendChild(li);
+  }
+
+  const nextLi = document.createElement('li');
+  nextLi.innerHTML = `<a href="#" data-page="next">&raquo;</a>`;
+  pagination.appendChild(nextLi);
+
+  pagination.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      const page = link.dataset.page;
+
+      if (page === 'prev') {
+        currentPage = Math.max(1, currentPage - 1);
+      } else if (page === 'next') {
+        currentPage = Math.min(totalPages, currentPage + 1);
+      } else {
+        currentPage = parseInt(page);
+      }
+
+      updateDisplay();
+    });
+  });
+}
+
+function updateDisplay() {
+  sortBooksByClicks();
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const booksToShow = filteredBooks.slice(startIndex, endIndex);
+
+  generateGridItems(booksToShow);
+  generatePagination(filteredBooks.length);
+  updateCarousel();
+}
+
+function changeItemsPerPage() {
+  itemsPerPage = parseInt(document.getElementById('itemsPerPage').value);
+  currentPage = 1;
+  updateDisplay();
+}
+
+function changeView(element, viewType) {
+  const viewToggle = document.querySelector('.view-toggle');
+  const grid = document.querySelector('.grid');
+  
+  viewToggle.querySelectorAll('li').forEach(li => li.classList.remove('active'));
+  element.classList.add('active');
+
+  if (viewType === 'list') {
+    grid.classList.add('list-view');
+  } else {
+    grid.classList.remove('list-view');
+  }
+}
+
+function updatePlaceholder() {
+  const searchCondition = document.getElementById('searchCondition');
+  const searchInput = document.getElementById('searchInput');
+  
+  switch(searchCondition.value) {
+    case 'title':
+      searchInput.placeholder = '輸入書名';
+      break;
+    case 'author':
+      searchInput.placeholder = '輸入作者';
+      break;
+    case 'isbn':
+      searchInput.placeholder = '輸入ISBN';
+      break;
+    case 'publisher':
+      searchInput.placeholder = '輸入出版社';
+      break;
+    default:
+      searchInput.placeholder = '搜索';
+  }
+}
+
+function performSearch() {
+  const searchInput = document.getElementById('searchInput');
+  const searchTerm = searchInput.value.trim();
+  
+  if (searchTerm) {
+    addToRecentSearches(searchTerm);
+    console.log('Searching for:', searchTerm);
+    searchInput.value = '';
+  }
+}
+
+function addToRecentSearches(term) {
+  let recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+  recentSearches = recentSearches.filter(item => item !== term);
+  recentSearches.unshift(term);
+  recentSearches = recentSearches.slice(0, 5);
+  localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+  displayRecentSearches();
+}
+
+function displayRecentSearches() {
+  const recentSearchesContainer = document.getElementById('recentSearches');
+  const recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || [];
+  
+  recentSearchesContainer.innerHTML = '';
+  recentSearches.forEach(term => {
+    const div = document.createElement('div');
+    div.textContent = term;
+    div.onclick = () => {
+      document.getElementById('searchInput').value = term;
+      hideRecentSearches();
+    };
+    recentSearchesContainer.appendChild(div);
+  });
+}
+
+function showRecentSearches() {
+  const recentSearchesContainer = document.getElementById('recentSearches');
+  recentSearchesContainer.style.display = 'block';
+}
+
+function hideRecentSearches() {
+  setTimeout(() => {
+    const recentSearchesContainer = document.getElementById('recentSearches');
+    recentSearchesContainer.style.display = 'none';
+  }, 200);
+}
+
+function incrementClicks(bookId) {
+  const book = booksData.find(b => b.id === bookId);
+  if (book) {
+    book.clicks++;
+    saveBooksData();
+    sortBooksByClicks();
+    updateDisplay();
+  }
+}
+
+function sortBooksByClicks() {
+  booksData.sort((a, b) => b.clicks - a.clicks);
+}
+
+function saveBooksData() {
+  localStorage.setItem('booksData', JSON.stringify(booksData));
+}
+
+function loadBooksData() {
+  const savedData = localStorage.getItem('booksData');
+  if (savedData) {
+    booksData.length = 0;
+    booksData.push(...JSON.parse(savedData));
+  }
+  filteredBooks = [...booksData];
+}
+
+function filterBySource() {
+  const sourceFilter = document.getElementById('sourceFilter').value;
+  if (sourceFilter === 'all') {
+    filteredBooks = [...booksData];
+  } else {
+    filteredBooks = booksData.filter(book => book.source === sourceFilter);
+  }
+  currentPage = 1;
+  updateDisplay();
+}
+
+function updateCarousel() {
+  const carousel = document.querySelector('.carousel');
+  const flkty = Flickity.data(carousel);
+  if (flkty) {
+    flkty.destroy();
+  }
+
+  const topBooks = [...booksData]
+    .sort((a, b) => b.clicks - a.clicks)
+    .slice(0, 3);
+
+  carousel.innerHTML = topBooks.map((book, index) => `
+    <div class="book-cell">
+      <div class="book-img">
+        <img src="${book.image}" alt="${book.title}" class="book-photo">
+      </div>
+      <div class="book-content">
+        <div class="book-title">${book.title}</div>
+        <div class="book-author">by ${book.author || '作者'}</div>
+        <div class="rate">
+          <fieldset class="rating">
+            <input type="checkbox" id="star${5*index+5}" name="rating" value="5">
+            <label class="full" for="star${5*index+5}"></label>
+            <input type="checkbox" id="star${5*index+4}" name="rating" value="4">
+            <label class="full" for="star${5*index+4}"></label>
+            <input type="checkbox" id="star${5*index+3}" name="rating" value="3">
+            <label class="full" for="star${5*index+3}"></label>
+            <input type="checkbox" id="star${5*index+2}" name="rating" value="2">
+            <label class="full" for="star${5*index+2}"></label>
+            <input type="checkbox" id="star${5*index+1}" name="rating" value="1">
+            <label class="full" for="star${5*index+1}"></label>
+          </fieldset>
+          <span class="book-voters">${book.voters}</span>
+        </div>
+        <div class="book-sum">${book.description || '暫無描述'}</div>
+        <a href="book.html" target="_blank" onclick="incrementClicks(${book.id})">
+          <div class="book-see">查看詳情</div>
+        </a>
+      </div>
+    </div>
+  `).join('');
+
+  new Flickity(carousel, {
+    cellAlign: 'center',
+    contain: true,
+    wrapAround: true,
+    autoPlay: 3000,
+    prevNextButtons: true,
+    pageDots: true,
+    adaptiveHeight: false
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadBooksData();
+  updateDisplay();
+  updatePlaceholder();
+  displayRecentSearches();
+});
 </script>
 
 </body>
