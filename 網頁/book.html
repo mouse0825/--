@@ -1,224 +1,760 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>書籍詳情</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            color: #333;
-        }
-        header {
-            background-color: #003366;
-            color: white;
-            padding: 10px 0;
-        }
-        .container {
-            width: 1200px;
-            margin: 0 auto;
-        }
-        .product-details {
-            display: flex;
-            margin-top: 20px;
-        }
-        .product-image {
-            width: 35%;
-            padding-right: 20px;
-        }
-        .product-image img {
-            max-width: 100%;
-            height: auto;
-        }
-        .product-info {
-            width: 65%;
-        }
-        .product-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .product-meta {
-            margin-bottom: 20px;
-        }
-        .product-meta p {
-            margin: 5px 0;
-        }
-        .product-price {
-            font-size: 20px;
-            color: #c00;
-            font-weight: bold;
-        }
-        .product-description {
-            margin-top: 30px;
-        }
-        .tab-container {
-            border-bottom: 1px solid #ddd;
-        }
-        .tab {
-            display: inline-block;
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-        .tab.active {
-            border: 1px solid #ddd;
-            border-bottom: none;
-            background-color: #fff;
-        }
-        .tab-content {
-            padding: 20px 0;
-        }
-        .user-reviews {
-            margin-top: 30px;
-        }
-        .review-form {
-            margin-bottom: 20px;
-        }
-        .review-form textarea {
-            width: 100%;
-            height: 100px;
-            margin-bottom: 10px;
-        }
-        .review-list {
-            border-top: 1px solid #ddd;
-            padding-top: 20px;
-        }
-        .review-item {
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-        .review-author {
-            font-weight: bold;
-        }
-        .review-date {
-            color: #888;
-            font-size: 0.9em;
-        }
-        header a {
-            color: white;
-            text-decoration: none;
-        }
-        header a:hover {
-            text-decoration: underline;
-        }
-    </style>
+<title>書籍詳情</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.header {
+  background-color: #003366;
+  padding: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  color: white;
+  font-size: 24px;
+  text-decoration: none;
+}
+
+/* 登入按鈕樣式 */
+.login-btn {
+  color: white;
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 2px solid white;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  margin-right: 20px;
+}
+
+.login-btn:hover {
+  background-color: white;
+  color: #003366;
+}
+
+/* 書籍詳情樣式 */
+.book-detail {
+  padding: 40px 0;
+}
+
+.book-content {
+  display: flex;
+  gap: 40px;
+}
+
+.book-image {
+  flex: 0 0 300px;
+}
+
+.book-image img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.book-info {
+  flex: 1;
+}
+
+.book-title {
+  font-size: 28px;
+  margin: 0 0 20px;
+  color: #333;
+}
+
+.book-meta {
+  margin-bottom: 30px;
+}
+
+.book-meta p {
+  margin: 10px 0;
+  color: #666;
+}
+
+.book-meta span {
+  font-weight: bold;
+  color: #333;
+}
+
+.book-description {
+  line-height: 1.6;
+  color: #444;
+}
+
+.action-buttons {
+  margin-top: 30px;
+  display: flex;
+  gap: 15px;
+}
+
+.action-button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.read-button {
+  background-color: #ff6600;
+  color: white;
+}
+
+.read-button:hover {
+  background-color: #ff8533;
+}
+
+.collect-button {
+  background-color: #003366;
+  color: white;
+}
+
+.collect-button:hover {
+  background-color: #004480;
+}
+
+/* 深色模式樣式 */
+body.dark-mode {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+body.dark-mode .header {
+  background-color: #2d2d2d;
+}
+
+body.dark-mode .book-title {
+  color: #ffffff;
+}
+
+body.dark-mode .book-meta p {
+  color: #999;
+}
+
+body.dark-mode .book-meta span {
+  color: #ffffff;
+}
+
+body.dark-mode .book-description {
+  color: #cccccc;
+}
+
+body.dark-mode .login-btn {
+  border-color: #ffffff;
+}
+
+body.dark-mode .login-btn:hover {
+  background-color: #ffffff;
+  color: #2d2d2d;
+}
+
+/* 登入彈窗樣式 */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close {
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.login-submit {
+  width: 100%;
+  padding: 10px;
+  background-color: #003366;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.login-submit:hover {
+  background-color: #004480;
+}
+
+/* 註冊連結樣式 */
+.register-link {
+  text-align: center;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+  font-size: 0.9em;
+}
+
+.register-link a {
+  color: #003366;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+/* 找回密碼連結樣式 */
+.forgot-password-link {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+
+.forgot-password-link a {
+  color: #003366;
+  text-decoration: none;
+}
+
+.forgot-password-link a:hover {
+  text-decoration: underline;
+}
+
+/* 深色模式的登入相關樣式 */
+body.dark-mode .modal-content {
+  background-color: #2d2d2d;
+  color: white;
+}
+
+body.dark-mode .form-group input {
+  background-color: #1a1a1a;
+  border-color: #404040;
+  color: white;
+}
+
+body.dark-mode .register-link {
+  border-top-color: #404040;
+}
+
+body.dark-mode .register-link a,
+body.dark-mode .forgot-password-link a {
+  color: #66b3ff;
+}
+
+/* 主題切換按鈕 */
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #003366;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+  border: none;
+  z-index: 1000;
+}
+
+body.dark-mode .theme-toggle {
+  background-color: #404040;
+}
+
+/* 側邊選單樣式 */
+.sidebar {
+  position: fixed;
+  left: -250px;
+  top: 0;
+  height: 100%;
+  width: 250px;
+  background-color: #003366;
+  padding-top: 60px;
+  transition: 0.3s;
+  z-index: 1000;
+}
+
+.sidebar.active {
+  left: 0;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-menu li {
+  padding: 15px 25px;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.sidebar-menu li:hover {
+  background-color: #004480;
+}
+
+.sidebar-menu i {
+  margin-right: 10px;
+}
+
+/* 子選單樣式 */
+.submenu {
+  list-style: none;
+  padding-left: 25px;
+  margin-top: 10px;
+  display: none;
+}
+
+.submenu li {
+  padding: 8px 15px;
+  font-size: 0.9em;
+}
+
+.submenu li:hover {
+  background-color: #004480;
+}
+
+/* 漢堡選單按鈕 */
+.menu-toggle {
+  position: fixed;
+  left: 20px;
+  top: 20px;
+  z-index: 1001;
+  cursor: pointer;
+  color: white;
+  font-size: 24px;
+}
+
+/* 遮罩層 */
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.overlay.active {
+  display: block;
+}
+
+/* 主要內容區域調整 */
+.main-content {
+  margin-left: 0;
+  transition: 0.3s;
+}
+
+.main-content.shifted {
+  margin-left: 250px;
+}
+
+body.dark-mode .menu-toggle {
+  color: #ffffff;
+}
+
+body.dark-mode .sidebar {
+  background-color: #2d2d2d;
+}
+
+/* 圖片預覽放大功能樣式 */
+.image-preview-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.image-preview-container:hover .image-preview {
+  opacity: 1;
+  visibility: visible;
+}
+
+.image-preview {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 80vw;
+  max-height: 80vh;
+  z-index: 2001;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+}
+
+.preview-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s;
+}
+
+.image-preview-container:hover .preview-overlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+.book-image {
+  position: relative;
+  cursor: zoom-in;
+}
+
+.book-image img {
+  transition: transform 0.3s ease;
+}
+
+body.dark-mode .image-preview {
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1><a href="Home.html">主頁</a></h1>
+<div class="header">
+  <div class="container">
+    <a href="Home.html" class="logo">主頁</a>
+  </div>
+  <a href="#" class="login-btn" onclick="showLoginModal()">登入</a>
+</div>
+
+<div class="menu-toggle" onclick="toggleSidebar()">
+  <i class="fas fa-bars"></i>
+</div>
+
+<div class="overlay" onclick="toggleSidebar()"></div>
+
+<div class="sidebar">
+  <ul class="sidebar-menu">
+    <li onclick="location.href='myself.html'">
+      <i class="fas fa-book"></i>個人書庫
+    </li>
+    <li onclick="showBookCategories()">
+      <i class="fas fa-list"></i>書籍分類
+      <ul class="submenu" id="bookCategories" style="display: none;">
+        <li><i class="fas fa-angle-right"></i>文學小說</li>
+        <li><i class="fas fa-angle-right"></i>科技資訊</li>
+        <li><i class="fas fa-angle-right"></i>藝術設計</li>
+        <li><i class="fas fa-angle-right"></i>商業理財</li>
+        <li><i class="fas fa-angle-right"></i>心理勵志</li>
+      </ul>
+    </li>
+    <li onclick="location.href='profile.html'">
+      <i class="fas fa-user"></i>個人資料
+    </li>
+    <li onclick="location.href='settings.html'">
+      <i class="fas fa-cog"></i>設定
+    </li>
+    <li onclick="toggleTheme()">
+      <i class="fas fa-moon" id="themeIcon"></i>深色模式
+    </li>
+    <li onclick="showHelp()">
+      <i class="fas fa-question-circle"></i>問題與幫助
+    </li>
+  </ul>
+</div>
+
+<div class="container">
+  <div class="book-detail">
+    <div class="book-content">
+      <div class="book-image">
+        <div class="image-preview-container">
+          <img src="https://i.imgur.com/yCFAW6y.jpg" alt="書籍封面" onmouseover="showPreview(this)" onmouseout="hidePreview()">
+          <div class="preview-overlay"></div>
+          <img class="image-preview" src="https://i.imgur.com/yCFAW6y.jpg" alt="書籍封面預覽">
         </div>
-    </header>
-
-    <main class="container">
-        <div class="product-details">
-            <div class="product-image">
-                <img src="https://via.placeholder.com/300x400" alt="書籍封面">
-            </div>
-            <div class="product-info">
-                <h2 class="product-title" id="bookTitle"></h2>
-                <div class="product-meta">
-                    <p id="bookAuthor"></p>
-                    <p id="bookPublisher"></p>
-                    <p id="bookPublishDate"></p>
-                    <p id="bookISBN"></p>
-                </div>
-                <div class="product-price" id="bookPrice"></div>
-                
-            </div>
+      </div>
+      <div class="book-info">
+        <h1 class="book-title">貓咪的日常生活</h1>
+        <div class="book-meta">
+          <p>作者：<span>貓咪作家</span></p>
+          <p>出版社：<span>寵物出版社</span></p>
+          <p>出版日期：<span>2023年10月</span></p>
+          <p>ISBN：<span>9789573317776</span></p>
+          <p>分類：<span>寵物 / 生活</span></p>
         </div>
-
-        <div class="product-description">
-            <div class="tab-container">
-                <div class="tab active" onclick="showTab('intro')">內容簡介</div>
-                <div class="tab" onclick="showTab('author')">作者介紹</div>
-            </div>
-            <div id="intro" class="tab-content">
-                <p id="bookIntro"></p>
-            </div>
-            <div id="author" class="tab-content" style="display:none;">
-                <p id="authorIntro"></p>
-            </div>
+        <div class="book-description">
+          <h2>內容簡介</h2>
+          <p>這是一本關於貓咪日常生活的有趣故事集。透過作者細膩的觀察，記錄了貓咪們的各種趣事，包括他們的睡眠習慣、飲食偏好、玩耍方式等。書中還包含了許多實用的養貓建議，是一本既有趣又實用的貓奴必讀書籍。</p>
         </div>
-
-        <div class="user-reviews">
-            <h3>用戶評論</h3>
-            <div class="review-form">
-                <h4>發表評論</h4>
-                <form id="reviewForm">
-                    <div>
-                        <label for="reviewAuthor">姓名:</label>
-                        <input type="text" id="reviewAuthor" required>
-                    </div>
-                    <div>
-                        <label for="reviewContent">評論內容:</label>
-                        <textarea id="reviewContent" required></textarea>
-                    </div>
-                    <button type="submit">提交評論</button>
-                </form>
-            </div>
-            <div class="review-list" id="reviewList">
-             
-            </div>
+        <div class="action-buttons">
+          <button class="action-button read-button" onclick="handleRead()">開始閱讀</button>
+          <button class="action-button collect-button" onclick="handleCollect()">加入收藏</button>
         </div>
-    </main>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <script>
-        function showTab(tabId) {
-          
-            var tabContents = document.getElementsByClassName('tab-content');
-            for (var i = 0; i < tabContents.length; i++) {
-                tabContents[i].style.display = 'none';
-            }
-         
-            document.getElementById(tabId).style.display = 'block';
-            
-        
-            var tabs = document.getElementsByClassName('tab');
-            for (var i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove('active');
-            }
-            event.target.classList.add('active');
-        }
+<!-- 登入彈窗 -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>登入</h2>
+      <span class="close" onclick="closeLoginModal()">&times;</span>
+    </div>
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label for="username">帳號</label>
+        <input type="text" id="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">密碼</label>
+        <input type="password" id="password" required>
+      </div>
+      <button type="submit" class="login-submit">登入</button>
+    </form>
+    <div class="register-link">
+      還沒有帳號？<a href="register.html" target="_blank">立即註冊</a>
+    </div>
+    <div class="forgot-password-link">
+      <a href="forgot-password.html" target="_blank">忘記密碼？</a>
+    </div>
+  </div>
+</div>
 
-        document.getElementById('reviewForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            var author = document.getElementById('reviewAuthor').value;
-            var content = document.getElementById('reviewContent').value;
-            var date = new Date().toLocaleString();
+<script>
+// 登入相關函數
+function showLoginModal() {
+  document.getElementById('loginModal').style.display = 'block';
+}
 
-            var reviewItem = document.createElement('div');
-            reviewItem.className = 'review-item';
-            reviewItem.innerHTML = `
-                <p class="review-author">${author}</p>
-                <p class="review-date">${date}</p>
-                <p>${content}</p>
-            `;
+function closeLoginModal() {
+  document.getElementById('loginModal').style.display = 'none';
+}
 
-            document.getElementById('reviewList').prepend(reviewItem);
+function handleLogin(event) {
+  event.preventDefault();
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  
+  // 這裡可以添加實際的登入邏輯
+  console.log('登入資訊:', { username, password });
+  
+  // 模擬登入成功
+  alert('登入成功！');
+  closeLoginModal();
+  
+  // 清空表單
+  event.target.reset();
+}
 
-            
-            document.getElementById('reviewAuthor').value = '';
-            document.getElementById('reviewContent').value = '';
-        });
+// 點擊彈窗外部關閉彈窗
+window.onclick = function(event) {
+  const modal = document.getElementById('loginModal');
+  if (event.target === modal) {
+    closeLoginModal();
+  }
+}
 
-        fetch('https://localhost:7282/')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('bookTitle').textContent = data.title;
-                document.getElementById('bookAuthor').textContent = '作者: ' + data.author;
-                document.getElementById('bookPublisher').textContent = '出版社: ' + data.publisher;
-                document.getElementById('bookPublishDate').textContent = '出版日期: ' + data.publishDate;
-                document.getElementById('bookISBN').textContent = 'ISBN: ' + data.isbn;
-                document.getElementById('bookPrice').textContent = 'NT$ ' + data.price;
-                document.getElementById('bookIntro').textContent = data.introduction;
-                document.getElementById('authorIntro').textContent = data.authorIntroduction;
-            })
-            .catch(error => console.error('Error:', error));
-    </script>
+// 主題切換
+function toggleTheme() {
+  document.body.classList.toggle('dark-mode');
+  const themeIcon = document.getElementById('themeIcon');
+  if (document.body.classList.contains('dark-mode')) {
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    themeIcon.classList.remove('fa-sun');
+    themeIcon.classList.add('fa-moon');
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+// 書籍相關函數
+function handleRead() {
+  // 檢查是否已登入
+  // 這裡應該添加實際的登入狀態檢查邏輯
+  const isLoggedIn = false;
+  
+  if (!isLoggedIn) {
+    alert('請先登入再開始閱讀');
+    showLoginModal();
+    return;
+  }
+  
+  // 這裡添加閱讀功能的實現
+  alert('開始閱讀');
+}
+
+function handleCollect() {
+  // 檢查是否已登入
+  // 這裡應該添加實際的登入狀態檢查邏輯
+  const isLoggedIn = false;
+  
+  if (!isLoggedIn) {
+    alert('請先登入再加入收藏');
+    showLoginModal();
+    return;
+  }
+  
+  // 這裡添加收藏功能的實現
+  alert('已加入收藏');
+}
+
+// 初始化主題
+document.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    const themeIcon = document.getElementById('themeIcon');
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+  }
+});
+
+// 側邊選單相關函數
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.overlay');
+  const mainContent = document.querySelector('.main-content');
+  
+  sidebar.classList.toggle('active');
+  overlay.classList.toggle('active');
+  mainContent.classList.toggle('shifted');
+}
+
+function showBookCategories() {
+  const categories = document.getElementById('bookCategories');
+  categories.style.display = categories.style.display === 'none' ? 'block' : 'none';
+}
+
+function showHelp() {
+  // 顯示幫助信息
+  alert('如需協助，請聯繫我們的客服團隊。\n電子郵件：support@example.com\n服務時間：週一至週五 9:00-18:00');
+}
+
+// 初始化
+document.addEventListener('DOMContentLoaded', () => {
+  // ... existing code ...
+
+  // 添加 ESC 鍵關閉側邊選單
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const sidebar = document.querySelector('.sidebar');
+      const overlay = document.querySelector('.overlay');
+      const mainContent = document.querySelector('.main-content');
+      
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      mainContent.classList.remove('shifted');
+    }
+  });
+});
+
+// 圖片預覽相關函數
+function showPreview(img) {
+  const previewImg = img.parentElement.querySelector('.image-preview');
+  const overlay = img.parentElement.querySelector('.preview-overlay');
+  
+  // 獲取原始圖片的更大版本（如果有的話）
+  const largeImageUrl = img.dataset.large || img.src;
+  previewImg.src = largeImageUrl;
+  
+  // 添加滑鼠移動事件來調整預覽圖位置
+  document.addEventListener('mousemove', movePreview);
+}
+
+function hidePreview() {
+  document.removeEventListener('mousemove', movePreview);
+}
+
+function movePreview(e) {
+  const preview = document.querySelector('.image-preview');
+  if (!preview) return;
+  
+  // 計算預覽圖的新位置
+  const mouseX = e.clientX;
+  const mouseY = e.clientY;
+  const windowWidth = window.innerWidth;
+  const windowHeight = window.innerHeight;
+  
+  // 確保預覽圖不會超出視窗範圍
+  let x = mouseX;
+  let y = mouseY;
+  
+  const previewRect = preview.getBoundingClientRect();
+  const previewWidth = previewRect.width;
+  const previewHeight = previewRect.height;
+  
+  // 調整 X 軸位置
+  if (mouseX + previewWidth > windowWidth) {
+    x = mouseX - previewWidth;
+  }
+  
+  // 調整 Y 軸位置
+  if (mouseY + previewHeight > windowHeight) {
+    y = mouseY - previewHeight;
+  }
+  
+  // 設置預覽圖位置
+  preview.style.transform = `translate(${x - windowWidth/2}px, ${y - windowHeight/2}px)`;
+}
+
+// 添加 ESC 鍵關閉預覽功能
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    hidePreview();
+  }
+});
+</script>
 </body>
 </html>

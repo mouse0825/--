@@ -421,6 +421,53 @@ body.dark-mode .form-group input {
   color: white;
 }
 
+/* 註冊連結樣式 */
+.register-link {
+  text-align: center;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+  font-size: 0.9em;
+}
+
+.register-link a {
+  color: #003366;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+body.dark-mode .register-link {
+  border-top-color: #404040;
+}
+
+body.dark-mode .register-link a {
+  color: #66b3ff;
+}
+
+/* 找回密碼連結樣式 */
+.forgot-password-link {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+
+.forgot-password-link a {
+  color: #003366;
+  text-decoration: none;
+}
+
+.forgot-password-link a:hover {
+  text-decoration: underline;
+}
+
+body.dark-mode .forgot-password-link a {
+  color: #66b3ff;
+}
+
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
@@ -520,6 +567,12 @@ body.dark-mode .form-group input {
       </div>
       <button type="submit" class="login-submit">登入</button>
     </form>
+    <div class="register-link">
+      還沒有帳號？<a href="register.html" target="_blank">立即註冊</a>
+    </div>
+    <div class="forgot-password-link">
+      <a href="forgot-password.html" target="_blank">忘記密碼？</a>
+    </div>
   </div>
 </div>
 
