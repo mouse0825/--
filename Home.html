@@ -2,8 +2,6 @@
 <html>
 <head>
 <title>書籍搜索</title>
-<link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
-<script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
 <style>
 body {
   font-family: Arial, sans-serif;
@@ -164,142 +162,141 @@ button {
   background-color: #f0f0f0;
 }
 
-/* 熱門書籍區域樣式 */
-.hot-books {
-  margin: 20px 0;
-  padding: 20px;
-  background: #f5f5f5;
+/* 側邊選單樣式 */
+.sidebar {
+  position: fixed;
+  left: -250px;
+  top: 0;
+  height: 100%;
+  width: 250px;
+  background-color: #003366;
+  padding-top: 60px;
+  transition: 0.3s;
+  z-index: 1000;
 }
 
-.carousel {
-  background: #f5f5f5;
-  height: 450px;
+.sidebar.active {
+  left: 0;
 }
 
-.book-cell {
-  width: 800px;
-  height: 400px;
-  margin: 0 20px;
-  padding: 20px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  display: flex;
-  align-items: center;
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.book-img {
-  width: 200px;
-  margin-right: 30px;
-  flex-shrink: 0;
+.sidebar-menu li {
+  padding: 15px 25px;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
 }
 
-.book-photo {
-  width: 100%;
-  height: 280px;
-  object-fit: cover;
-  border-radius: 4px;
+.sidebar-menu li:hover {
+  background-color: #004480;
 }
 
-.book-content {
-  flex: 1;
-}
-
-.book-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.book-author {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 15px;
-}
-
-.book-sum {
-  font-size: 14px;
-  line-height: 1.6;
-  margin-bottom: 20px;
-  color: #666;
-}
-
-.book-see {
-  display: inline-block;
-  padding: 10px 30px;
-  border-radius: 25px;
-  background: #ff6600;
-  color: #fff;
-  font-weight: bold;
-  transition: 0.3s ease;
-}
-
-.rating {
-  border: none;
-  float: left;
+.sidebar-menu i {
   margin-right: 10px;
 }
 
-.rating > input {
-  display: none;
+/* 主要內容區域調整 */
+.main-content {
+  margin-left: 0;
+  transition: 0.3s;
 }
 
-.rating > label:before {
-  content: '★';
-  font-size: 20px;
-  color: #ddd;
-  cursor: pointer;
+.main-content.shifted {
+  margin-left: 250px;
 }
 
-.rating > input:checked ~ label:before,
-.rating:not(:checked) > label:hover:before,
-.rating:not(:checked) > label:hover ~ label:before {
-  color: #ffd700;
-}
-
-.rating > label {
-  float: right;
-  padding: 0 2px;
-  cursor: pointer;
-}
-
-.book-voters {
-  color: #666;
-  font-size: 14px;
-  line-height: 24px;
-  margin-left: 10px;
-}
-
-.rate {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-/* Flickity 相關樣式 */
-.flickity-viewport {
-  height: 450px !important;
-}
-
-.flickity-slider {
-  display: flex;
-  align-items: center;
-}
-
-.flickity-button {
-  background: #fff;
-}
-
-.flickity-prev-next-button {
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
   width: 40px;
   height: 40px;
+  border-radius: 50%;
+  background-color: #003366;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+  z-index: 1000;
 }
 
-.flickity-page-dots {
-  bottom: -40px;
+.help-button {
+  position: fixed;
+  bottom: 70px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #003366;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+body.dark-mode {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+body.dark-mode .grid-item {
+  background-color: #2d2d2d;
+  border-color: #404040;
+}
+
+body.dark-mode .header {
+  background-color: #2d2d2d;
+}
+
+body.dark-mode .sidebar {
+  background-color: #2d2d2d;
+}
+
+body.dark-mode .theme-toggle,
+body.dark-mode .help-button {
+  background-color: #404040;
+}
+
+.menu-toggle {
+  position: fixed;
+  left: 20px;
+  top: 20px;
+  z-index: 1001;
+  cursor: pointer;
+  color: white;
+  font-size: 24px;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.overlay.active {
+  display: block;
+}
+
+body.dark-mode .menu-toggle {
+  color: #ffffff;
 }
 
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
 
@@ -309,60 +306,73 @@ button {
   </div>
 </div>
 
-<div class="container">
-  <!-- 熱門書籍區域 -->
-  <div class="hot-books">
-    <h2 class="section-title">熱門書籍</h2>
-    <div class="carousel">
-      <!-- 輪播內容將由 JavaScript 動態生成 -->
-    </div>
-  </div>
+<div class="menu-toggle" onclick="toggleSidebar()">
+  <i class="fas fa-bars"></i>
+</div>
 
-  <div class="search-container">
-    <div class="filter">
-      <select id="searchCondition" onchange="updatePlaceholder()">
-        <option value="" disabled selected>選擇條件</option>
-        <option value="title">書名</option>
-        <option value="author">作者</option>
-        <option value="isbn">ISBN</option>
-        <option value="publisher">出版社</option>
-      </select>
-    </div>
-    <div class="search-wrapper">
-      <input type="text" id="searchInput" placeholder="搜索" onfocus="showRecentSearches()" onblur="hideRecentSearches()">
-      <div class="recent-searches" id="recentSearches"></div>
-    </div>
-    <button onclick="performSearch()">搜索</button>
-  </div>
+<div class="overlay" onclick="toggleSidebar()"></div>
 
-  <div class="view-options">
-    <div class="filter-group">
+<div class="sidebar">
+  <ul class="sidebar-menu">
+    <li onclick="location.href='myself.html'"><i class="fas fa-book"></i>個人書庫</li>
+    <li><i class="fas fa-list"></i>書籍分類</li>
+    <li><i class="fas fa-user"></i>個人資料</li>
+    <li><i class="fas fa-cog"></i>設定</li>
+    <li onclick="toggleTheme()">
+      <i class="fas fa-moon" id="themeIcon"></i>深色模式
+    </li>
+    <li><i class="fas fa-question-circle"></i>問題與幫助</li>
+  </ul>
+</div>
+
+<div class="main-content">
+  <div class="container">
+    <div class="search-container">
       <div class="filter">
-        <select id="itemsPerPage" onchange="changeItemsPerPage()">
-          <option value="24" selected>每頁顯示24個</option>
-          <option value="48">每頁顯示48個</option>
-          <option value="72">每頁顯示72個</option>
+        <select id="searchCondition" onchange="updatePlaceholder()">
+          <option value="" disabled selected>選擇條件</option>
+          <option value="title">書名</option>
+          <option value="author">作者</option>
+          <option value="isbn">ISBN</option>
+          <option value="publisher">出版社</option>
         </select>
       </div>
-      <div class="filter">
-        <select id="sourceFilter" onchange="filterBySource()">
-          <option value="all" selected>全部</option>
-          <option value="berkeley">柏克萊</option>
-          <option value="newbooks">新書網</option>
-        </select>
+      <div class="search-wrapper">
+        <input type="text" id="searchInput" placeholder="搜索" onfocus="showRecentSearches()" onblur="hideRecentSearches()">
+        <div class="recent-searches" id="recentSearches"></div>
       </div>
+      <button onclick="performSearch()">搜索</button>
     </div>
-    <ul class="view-toggle">
-      <li class="active" onclick="changeView(this, 'list')"><i class="icon-th-list-1"></i>列表</li>
-      <li onclick="changeView(this, 'grid')"><i class="icon-th-large-1"></i>小圖</li>
+
+    <div class="view-options">
+      <div class="filter-group">
+        <div class="filter">
+          <select id="itemsPerPage" onchange="changeItemsPerPage()">
+            <option value="24" selected>每頁顯示24個</option>
+            <option value="48">每頁顯示48個</option>
+            <option value="72">每頁顯示72個</option>
+          </select>
+        </div>
+        <div class="filter">
+          <select id="sourceFilter" onchange="filterBySource()">
+            <option value="all" selected>全部</option>
+            <option value="berkeley">柏克萊</option>
+            <option value="newbooks">新書網</option>
+          </select>
+        </div>
+      </div>
+      <ul class="view-toggle">
+        <li class="active" onclick="changeView(this, 'list')"><i class="icon-th-list-1"></i>列表</li>
+        <li onclick="changeView(this, 'grid')"><i class="icon-th-large-1"></i>小圖</li>
+      </ul>
+    </div>
+
+    <div id="book-grid" class="grid">
+    </div>
+
+    <ul class="pagination" id="pagination">
     </ul>
   </div>
-
-  <div id="book-grid" class="grid">
-  </div>
-
-  <ul class="pagination" id="pagination">
-  </ul>
 </div>
 
 <script>
@@ -493,7 +503,6 @@ function updateDisplay() {
 
   generateGridItems(booksToShow);
   generatePagination(filteredBooks.length);
-  updateCarousel();
 }
 
 function changeItemsPerPage() {
@@ -624,57 +633,28 @@ function filterBySource() {
   updateDisplay();
 }
 
-function updateCarousel() {
-  const carousel = document.querySelector('.carousel');
-  const flkty = Flickity.data(carousel);
-  if (flkty) {
-    flkty.destroy();
+function toggleTheme() {
+  document.body.classList.toggle('dark-mode');
+  const themeIcon = document.getElementById('themeIcon');
+  if (document.body.classList.contains('dark-mode')) {
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    themeIcon.classList.remove('fa-sun');
+    themeIcon.classList.add('fa-moon');
+    localStorage.setItem('theme', 'light');
   }
+}
 
-  const topBooks = [...booksData]
-    .sort((a, b) => b.clicks - a.clicks)
-    .slice(0, 3);
-
-  carousel.innerHTML = topBooks.map((book, index) => `
-    <div class="book-cell">
-      <div class="book-img">
-        <img src="${book.image}" alt="${book.title}" class="book-photo">
-      </div>
-      <div class="book-content">
-        <div class="book-title">${book.title}</div>
-        <div class="book-author">by ${book.author || '作者'}</div>
-        <div class="rate">
-          <fieldset class="rating">
-            <input type="checkbox" id="star${5*index+5}" name="rating" value="5">
-            <label class="full" for="star${5*index+5}"></label>
-            <input type="checkbox" id="star${5*index+4}" name="rating" value="4">
-            <label class="full" for="star${5*index+4}"></label>
-            <input type="checkbox" id="star${5*index+3}" name="rating" value="3">
-            <label class="full" for="star${5*index+3}"></label>
-            <input type="checkbox" id="star${5*index+2}" name="rating" value="2">
-            <label class="full" for="star${5*index+2}"></label>
-            <input type="checkbox" id="star${5*index+1}" name="rating" value="1">
-            <label class="full" for="star${5*index+1}"></label>
-          </fieldset>
-          <span class="book-voters">${book.voters}</span>
-        </div>
-        <div class="book-sum">${book.description || '暫無描述'}</div>
-        <a href="book.html" target="_blank" onclick="incrementClicks(${book.id})">
-          <div class="book-see">查看詳情</div>
-        </a>
-      </div>
-    </div>
-  `).join('');
-
-  new Flickity(carousel, {
-    cellAlign: 'center',
-    contain: true,
-    wrapAround: true,
-    autoPlay: 3000,
-    prevNextButtons: true,
-    pageDots: true,
-    adaptiveHeight: false
-  });
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.querySelector('.overlay');
+  const mainContent = document.querySelector('.main-content');
+  
+  sidebar.classList.toggle('active');
+  overlay.classList.toggle('active');
+  mainContent.classList.toggle('shifted');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -682,6 +662,26 @@ document.addEventListener('DOMContentLoaded', () => {
   updateDisplay();
   updatePlaceholder();
   displayRecentSearches();
+  
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    const themeIcon = document.getElementById('themeIcon');
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      const sidebar = document.querySelector('.sidebar');
+      const overlay = document.querySelector('.overlay');
+      const mainContent = document.querySelector('.main-content');
+      
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      mainContent.classList.remove('shifted');
+    }
+  });
 });
 </script>
 
